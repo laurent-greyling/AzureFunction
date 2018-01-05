@@ -11,13 +11,13 @@ namespace AzureFunction
     public static class CreateContainer
     {
         [FunctionName("CreateContainer")]
-        public static void Run([QueueTrigger("create-container")]string containers, TraceWriter log)
+        public static void Run([QueueTrigger("create-container")]string containerDetails, TraceWriter log)
         {
-            var containerDetails = JsonConvert.DeserializeObject<ContainerDetails>(containers);
+            var details = JsonConvert.DeserializeObject<ContainerDetails>(containerDetails);
 
-            CreateContainers(containerDetails);
+            CreateContainers(details);
 
-            AddMessage.Send(containers, "retrieve-blob");
+            AddMessage.Send(containerDetails, "retrieve-blob");
         }
 
         private static void CreateContainers(ContainerDetails details)
