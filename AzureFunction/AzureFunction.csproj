@@ -3,7 +3,11 @@
     <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <ItemGroup>    
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.2" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.2" />    
+    <PackageReference Include="Microsoft.WindowsAzure.ConfigurationManager" Version="3.2.3" />    
+    <PackageReference Include="Microsoft.WindowsAzure.Management.Scheduler" Version="6.2.0" />    
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />    
+    <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
