@@ -1,10 +1,7 @@
 ﻿namespace AzureFunction.Models
 {
-    public class ContainerDetails
+    public class ContainerDetails : StorageAccountPair
     {
-        public string Production { get; set; }
-        public string Backup { get; set; }
-
         public string ContainerName { get; set; }
     }
 }
