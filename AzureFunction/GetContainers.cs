@@ -27,15 +27,15 @@ namespace AzureFunction
 
         private static List<string> RetrieveContainers(StorageAccountPair pair)
         {
-            var productionConnectionString = CloudConfigurationManager.GetSetting(pair.Production);
-            var productionStorageAccount =
-                CloudStorageAccount.Parse(productionConnectionString);
-            var blobClient = productionStorageAccount.CreateCloudBlobClient();
+            var sourceConnectionString = CloudConfigurationManager.GetSetting(pair.Source);
+            var sourceStorageAccount =
+                CloudStorageAccount.Parse(sourceConnectionString);
+            var blobClient = sourceStorageAccount.CreateCloudBlobClient();
 
             return blobClient.ListContainers().Select(c => JsonConvert.SerializeObject(new ContainerDetails
             {
-                Production = pair.Production,
-                Backup = pair.Backup,
+                Source = pair.Source,
+                Destination = pair.Destination,
                 ContainerName = c.Name
             })).ToList();
         }

@@ -2,7 +2,7 @@
 {
     public class StorageAccountPair
     {
-        public string Production { get; set; }
-        public string Backup { get; set; }
+        public string Source { get; set; }
+        public string Destination { get; set; }
     }
 }

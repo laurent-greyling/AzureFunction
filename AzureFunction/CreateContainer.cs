@@ -22,10 +22,10 @@ namespace AzureFunction
 
         private static void CreateContainers(ContainerDetails details)
         {
-            var backupConnectionString = CloudConfigurationManager.GetSetting(details.Backup);
-            var backupStorageAccount =
-                CloudStorageAccount.Parse(backupConnectionString);
-            var blobClient = backupStorageAccount.CreateCloudBlobClient();
+            var destConnectionString = CloudConfigurationManager.GetSetting(details.Destination);
+            var destStorageAccount =
+                CloudStorageAccount.Parse(destConnectionString);
+            var blobClient = destStorageAccount.CreateCloudBlobClient();
             var containerReference = blobClient.GetContainerReference(details.ContainerName);
 
             containerReference.CreateIfNotExists();

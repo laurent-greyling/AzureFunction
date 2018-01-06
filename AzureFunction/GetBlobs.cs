@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using AzureFunction.Helpers;
@@ -29,19 +28,18 @@ namespace AzureFunction
 
         private static List<string> RetrieveBlobs(ContainerDetails details)
         {
-            var productionConnectionString = CloudConfigurationManager.GetSetting(details.Production);
-            var productionStorageAccount =
-                CloudStorageAccount.Parse(productionConnectionString);
-            var blobClient = productionStorageAccount.CreateCloudBlobClient();
+            var sourceConnectionString = CloudConfigurationManager.GetSetting(details.Source);
+            var sourceStorageAccount =
+                CloudStorageAccount.Parse(sourceConnectionString);
+            var blobClient = sourceStorageAccount.CreateCloudBlobClient();
             var containerReference = blobClient.GetContainerReference(details.ContainerName);
 
             return  containerReference.ListBlobs().Cast<CloudBlob>().Select(x => JsonConvert.SerializeObject(new BlobDetails
             {
-                Production = details.Production,
-                Backup = details.Backup,
+                Source = details.Source,
+                Destination = details.Destination,
                 ContainerName = details.ContainerName,
-                BlobName = x.Name,
-                BlobUri = x.Uri
+                BlobName = x.Name
             })).ToList();
         }
     }

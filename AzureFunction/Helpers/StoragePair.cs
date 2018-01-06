@@ -9,11 +9,11 @@ namespace AzureFunction.Helpers
 {
     public class StoragePair
     {
-        public StorageAccountPair Get(string myQueueItem)
+        public StorageAccountPair Get(string queueItem)
         {
             var serializer = new XmlSerializer(typeof(StorageQueueMessage));
 
-            using (var xmlstream = new MemoryStream(Encoding.Unicode.GetBytes(myQueueItem)))
+            using (var xmlstream = new MemoryStream(Encoding.Unicode.GetBytes(queueItem)))
             {
                 var message = (StorageQueueMessage)serializer.Deserialize(xmlstream);
 
