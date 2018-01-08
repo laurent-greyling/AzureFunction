@@ -8,11 +8,11 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
 
-namespace AzureFunction
+namespace AzureFunction.Fuctions
 {
-    public static class GetContainers
+    public static class GetContainersFunction
     {
-        [FunctionName("GetContainers")]
+        [FunctionName("GetContainersFunction")]
         public static void Run([QueueTrigger("get-containers")]string scheduledQueueItem, TraceWriter log)
         {
             var pair = new StoragePair().Get(scheduledQueueItem);

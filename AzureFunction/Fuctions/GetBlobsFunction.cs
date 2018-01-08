@@ -9,11 +9,11 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
 
-namespace AzureFunction
+namespace AzureFunction.Fuctions
 {
-    public static class GetBlobs
+    public static class GetBlobsFunction
     {
-        [FunctionName("GetBlobs")]
+        [FunctionName("GetBlobsFunction")]
         public static void Run([QueueTrigger("retrieve-blob", Connection = "")]string containerDetails, TraceWriter log)
         {
             var details = JsonConvert.DeserializeObject<ContainerDetails>(containerDetails);

@@ -1,16 +1,14 @@
-using System.IO;
-using System.Net;
 using AzureFunction.Helpers;
 using AzureFunction.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 
-namespace AzureFunction
+namespace AzureFunction.Fuctions
 {
-    public static class CopyBlob
+    public static class CopyBlobFunction
     {
-        [FunctionName("CopyBlob")]
+        [FunctionName("CopyBlobFunction")]
         public static void Run([QueueTrigger("copy-blob")]string blobItem, TraceWriter log)
         {
             var details = JsonConvert.DeserializeObject<BlobDetails>(blobItem);

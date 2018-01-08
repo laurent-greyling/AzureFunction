@@ -6,11 +6,11 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
 
-namespace AzureFunction
+namespace AzureFunction.Fuctions
 {
-    public static class CreateContainer
+    public static class CreateContainerFunction
     {
-        [FunctionName("CreateContainer")]
+        [FunctionName("CreateContainerFunction")]
         public static void Run([QueueTrigger("create-container")]string containerDetails, TraceWriter log)
         {
             var details = JsonConvert.DeserializeObject<ContainerDetails>(containerDetails);
