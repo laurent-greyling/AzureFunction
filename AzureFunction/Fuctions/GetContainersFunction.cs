@@ -15,12 +15,14 @@ namespace AzureFunction.Fuctions
         [FunctionName("GetContainersFunction")]
         public static void Run([QueueTrigger("get-containers")]string scheduledQueueItem, TraceWriter log)
         {
+            //deserialise the xml we get from scheduler to get the message.
             var pair = new StoragePair().Get(scheduledQueueItem);
 
             var messages = RetrieveContainers(pair);
             
             foreach (var message in messages)
             {
+                //creates a message and sends to the create-container queue where next function will pick up
                 AddMessage.Send(message, "create-container");
             }
         }
