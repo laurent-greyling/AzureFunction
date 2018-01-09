@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AzureFunction.Helpers;
 using AzureFunction.Models;
@@ -16,13 +18,24 @@ namespace AzureFunction.Fuctions
         [FunctionName("GetBlobsFunction")]
         public static void Run([QueueTrigger("retrieve-blob", Connection = "")]string containerDetails, TraceWriter log)
         {
+            var telemetry = AppInsightClient.Telemetry;
+
             var details = JsonConvert.DeserializeObject<ContainerDetails>(containerDetails);
 
-            var blobs = RetrieveBlobs(details);
-
-            foreach (var blobDetails in blobs)
+            try
             {
-                AddMessage.Send(blobDetails, "copy-blob");
+                telemetry.TrackTrace($"Retrieve Blobs for Container: {details.ContainerName}");
+
+                var blobs = RetrieveBlobs(details);
+
+                foreach (var blobDetails in blobs)
+                {
+                    AddMessage.Send(blobDetails, "copy-blob");
+                }
+            }
+            catch (Exception e)
+            {
+                telemetry.TrackTrace($"ERROR: Cannot retrieve blobs for container: {details.ContainerName}, exception: {e}");
             }
         }
 
@@ -33,14 +46,24 @@ namespace AzureFunction.Fuctions
                 CloudStorageAccount.Parse(sourceConnectionString);
             var blobClient = sourceStorageAccount.CreateCloudBlobClient();
             var containerReference = blobClient.GetContainerReference(details.ContainerName);
-
-            return  containerReference.ListBlobs().Cast<CloudBlob>().Select(x => JsonConvert.SerializeObject(new BlobDetails
+            var blobs = containerReference.ListBlobs().Cast<CloudBlob>().Select(x => JsonConvert.SerializeObject(new BlobDetails
             {
                 Source = details.Source,
                 Destination = details.Destination,
                 ContainerName = details.ContainerName,
                 BlobName = x.Name
             })).ToList();
+
+            blobs.Add(JsonConvert.SerializeObject(new BlobDetails
+            {
+                Source = details.Source,
+                Destination = details.Destination,
+                ContainerName = details.ContainerName,
+                BlobName = "blob404"
+            }));
+
+            return blobs;
+
         }
     }
 }

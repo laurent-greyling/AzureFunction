@@ -5,5 +5,16 @@
     "batchSize": 16,
     "maxDequeueCount": 5,
     "newBatchThreshold": 8
+  },
+  "logger": {
+    "categoryFilter": {
+      "defaultLevel": "None"
+    },
+    "applicationInsights": {
+      "sampling": {
+        "isEnabled": false,
+        "maxTelemetryItemsPerSecond": 5
+      }
+    }
   }
 }

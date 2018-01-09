@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using AzureFunction.Helpers;
 using AzureFunction.Models;
 using Microsoft.Azure;
@@ -13,11 +15,22 @@ namespace AzureFunction.Fuctions
         [FunctionName("CreateContainerFunction")]
         public static void Run([QueueTrigger("create-container")]string containerDetails, TraceWriter log)
         {
+            var telemetry = AppInsightClient.Telemetry;
+
             var details = JsonConvert.DeserializeObject<ContainerDetails>(containerDetails);
 
-            CreateContainers(details);
+            try
+            {
+                telemetry.TrackTrace($"Create Container: {details.ContainerName}");
 
-            AddMessage.Send(containerDetails, "retrieve-blob");
+                CreateContainers(details);
+
+                AddMessage.Send(containerDetails, "retrieve-blob");
+            }
+            catch (Exception e)
+            {
+                telemetry.TrackTrace($"ERROR Container: {details.ContainerName}, Exception: {e}");
+            }
         }
 
         private static void CreateContainers(ContainerDetails details)

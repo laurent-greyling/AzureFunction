@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using AzureFunction.Helpers;
 using AzureFunction.Models;
 using Microsoft.Azure.WebJobs;
@@ -11,9 +13,20 @@ namespace AzureFunction.Fuctions
         [FunctionName("CopyBlobFunction")]
         public static void Run([QueueTrigger("copy-blob")]string blobItem, TraceWriter log)
         {
+            var telemetry = AppInsightClient.Telemetry;
+            
             var details = JsonConvert.DeserializeObject<BlobDetails>(blobItem);
 
-            MoveBlobs(details);
+            try
+            {
+                telemetry.TrackTrace($"Copy Blob {details.BlobName}");
+
+                MoveBlobs(details);
+            }
+            catch (Exception e)
+            {
+                telemetry.TrackTrace($"ERROR: Cannot copy blob: {details.BlobName}, exception: {e}");
+            }
         }
 
         private static void MoveBlobs(BlobDetails details)
