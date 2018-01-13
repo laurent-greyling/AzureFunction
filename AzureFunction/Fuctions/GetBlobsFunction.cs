@@ -16,7 +16,7 @@ namespace AzureFunction.Fuctions
     public static class GetBlobsFunction
     {
         [FunctionName("GetBlobsFunction")]
-        public static void Run([QueueTrigger("retrieve-blob", Connection = "")]string containerDetails, TraceWriter log)
+        public static void Run([QueueTrigger("retrieve-blob")]string containerDetails, TraceWriter log)
         {
             var telemetry = AppInsightClient.Telemetry;
 

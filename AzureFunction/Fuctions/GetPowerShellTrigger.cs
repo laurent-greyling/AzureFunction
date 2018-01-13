@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AzureFunction.Helpers;
 using AzureFunction.Models;
 using Microsoft.Azure;
 using Microsoft.Azure.WebJobs;
@@ -22,8 +23,17 @@ namespace AzureFunction.Fuctions
             var azureDetails = JsonConvert.DeserializeObject<AzureDetails>(data);
 
             SavePair(azureDetails.PairName,azureDetails.ProductionConnection, azureDetails.BackupConnection);
+
+            AddMessage.Send(JsonConvert.SerializeObject(new AzureDetails()
+            {
+                ResourceGroup = azureDetails.ResourceGroup,
+                PairName =azureDetails.PairName,
+                StartTime =azureDetails.StartTime
+            }),
+            "create-scheduler");
+
             // Fetching the name from the path parameter in the request URL
-            return req.CreateResponse(HttpStatusCode.OK, "Hello ");
+            return req.CreateResponse(HttpStatusCode.OK, "Process Started");
         }
 
         private static void SavePair(string pairName, string source, string destination)
